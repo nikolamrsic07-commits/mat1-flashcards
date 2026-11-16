@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MAT1 Teorija" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>MAT1 Teorija – Flashcards &amp; Kviz (FERI)</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-2: #e2e8f0;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --primary-text: #1e40af;
+      --ok: #16a34a;
+      --ok-soft: #dcfce7;
+      --ok-text: #166534;
+      --bad: #dc2626;
+      --bad-soft: #fee2e2;
+      --bad-text: #991b1b;
+      --warn: #d97706;
+      --warn-soft: #fef3c7;
+      --warn-text: #92400e;
+      --shadow: 0 10px 26px -6px rgba(15, 23, 42, 0.14);
+    }
+    html.dark {
+      --bg: #0b1120;
+      --surface: #1e293b;
+      --surface-2: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --primary: #3b82f6;
+      --primary-soft: rgba(59, 130, 246, 0.22);
+      --primary-text: #93c5fd;
+      --ok: #22c55e;
+      --ok-soft: rgba(34, 197, 94, 0.2);
+      --ok-text: #86efac;
+      --bad: #ef4444;
+      --bad-soft: rgba(239, 68, 68, 0.2);
+      --bad-text: #fca5a5;
+      --warn: #f59e0b;
+      --warn-soft: rgba(245, 158, 11, 0.2);
+      --warn-text: #fde68a;
+      --shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.55);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: contain;
+    }
+    .app {
+      max-width: 540px;
+      margin: 0 auto;
+      padding-top: calc(10px + env(safe-area-inset-top));
+      padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      padding-left: calc(14px + env(safe-area-inset-left));
+      padding-right: calc(14px + env(safe-area-inset-right));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .brand { display: flex; flex-direction: column; }
+    .brand h1 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.15;
+    }
+    .brand span {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--surface-2);
+      padding: 3px;
+      border-radius: 12px;
+      gap: 4px;
+    }
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 6px;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    .chips {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 2px 1px 4px 1px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+    .chip.trap-chip.active {
+      background: var(--bad);
+      border-color: var(--bad);
+      color: #ffffff;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 600;
+      gap: 8px;
+    }
+    .progress-wrap {
+      width: 100%;
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--ok));
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+    .toggle-unknown {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .toggle-unknown.active {
+      background: var(--warn-soft);
+      border-color: var(--warn);
+      color: var(--warn-text);
+    }
+    .stage {
+      perspective: 1100px;
+      -webkit-perspective: 1100px;
+      width: 100%;
+      height: 360px;
+      position: relative;
+      touch-action: pan-y;
+    }
+    @media (min-height: 780px) {
+      .stage { height: 400px; }
+    }
+    .card-3d {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+    }
+    .card-3d.flipped {
+      transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
+    }
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .face-back {
+      transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
+      border-color: var(--primary);
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .cat-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      background: var(--primary-soft);
+      color: var(--primary-text);
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .trap-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      background: var(--bad-soft);
+      color: var(--bad-text);
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .known-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .known-pill.yes { background: var(--ok-soft); color: var(--ok-text); }
+    .known-pill.no { background: var(--surface-2); color: var(--muted); }
+    .q-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.38;
+      padding: 12px 4px;
+    }
+    .a-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 2px;
+      font-size: 15.5px;
+      line-height: 1.45;
+    }
+    .formula-box {
+      background: var(--primary-soft);
+      color: var(--text);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      padding: 9px 11px;
+      font-size: 15.5px;
+      font-weight: 600;
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+    .trap-box {
+      background: var(--bad-soft);
+      color: var(--bad-text);
+      border-left: 4px solid var(--bad);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.38;
+    }
+    .tap-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .f {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 0.84em;
+      line-height: 1.05;
+      margin: 0 2px;
+    }
+    .f .n {
+      border-bottom: 1.2px solid currentColor;
+      padding: 0 3px 1px 3px;
+    }
+    .f .d {
+      padding: 1px 3px 0 3px;
+    }
+    .m {
+      font-family: "Times New Roman", Cambria, Georgia, serif;
+      font-size: 1.05em;
+    }
+    .actions-main {
+      display: grid;
+      grid-template-columns: 1fr 0.9fr 1fr;
+      gap: 8px;
+    }
+    .actions-sec {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 0.8fr;
+      gap: 7px;
+    }
+    .btn {
+      border: none;
+      border-radius: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: transform 0.08s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-bad { background: var(--bad-soft); color: var(--bad-text); border: 1px solid var(--bad); }
+    .btn-ok { background: var(--ok-soft); color: var(--ok-text); border: 1px solid var(--ok); }
+    .btn-flip { background: var(--primary); color: #ffffff; }
+    .btn-sec {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 6px;
+      cursor: pointer;
+    }
+    .btn-sec:active { transform: scale(0.97); }
+    .hidden { display: none !important; }
+    .quiz-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .quiz-q {
+      font-size: 17.5px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .quiz-opts {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .opt-btn {
+      text-align: left;
+      background: var(--bg);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      line-height: 1.35;
+    }
+    .opt-btn.correct {
+      background: var(--ok-soft);
+      border-color: var(--ok);
+      color: var(--ok-text);
+    }
+    .opt-btn.wrong {
+      background: var(--bad-soft);
+      border-color: var(--bad);
+      color: var(--bad-text);
+    }
+    .quiz-exp {
+      background: var(--primary-soft);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>MAT I – Teorija (FERI)</h1>
+      <span>Vse (1)–(6) · Kartice &amp; Kolokvijski kviz</span>
+    </div>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Temni način">🌓 Tema</button>
+  </div>
+
+  <div class="tabs">
+    <button id="tabFlash" class="tab-btn active" type="button">📇 Kartice (60)</button>
+    <button id="tabQuiz" class="tab-btn" type="button">🎯 Hitri Kviz (20)</button>
+  </div>
+
+  <div id="flashView" style="display:flex; flex-direction:column; gap:10px;">
+    <div id="chips" class="chips"></div>
+
+    <div class="status-row">
+      <span id="counterTxt">Kartica 1 / 60 · Znam: 0</span>
+      <button id="unknownToggle" class="toggle-unknown" type="button">Samo neznane</button>
+    </div>
+    <div class="progress-wrap"><div id="progressBar" class="progress-fill"></div></div>
+
+    <div id="stage" class="stage">
+      <div id="card3d" class="card-3d">
+        <div class="face face-front">
+          <div class="card-meta">
+            <span id="fCat" class="cat-badge">Sklop</span>
+            <span id="fTrap" class="trap-badge hidden">⚠️ IZPITNA PAST</span>
+            <span id="fKnown" class="known-pill no">Še vadim</span>
+          </div>
+          <div id="qText" class="q-body"></div>
+          <div class="tap-hint">Tapni za odgovor · Podrsaj levo/desno za menjavo</div>
+        </div>
+        <div class="face face-back">
+          <div class="card-meta">
+            <span id="bCat" class="cat-badge">Odgovor</span>
+            <span id="bKnown" class="known-pill no">Še vadim</span>
+          </div>
+          <div id="aText" class="a-body"></div>
+          <div class="tap-hint">Tapni za vprašanje</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-main">
+      <button id="btnRepeat" class="btn btn-bad" type="button">❌ Ponovi</button>
+      <button id="btnFlip" class="btn btn-flip" type="button">🔄 Obrni</button>
+      <button id="btnKnow" class="btn btn-ok" type="button">✅ Znam</button>
+    </div>
+    <div class="actions-sec">
+      <button id="btnPrev" class="btn-sec" type="button">◀ Prejšnja</button>
+      <button id="btnShuffle" class="btn-sec" type="button">🔀 Premešaj</button>
+      <button id="btnNext" class="btn-sec" type="button">Naprej ▶</button>
+      <button id="btnReset" class="btn-sec" type="button">♻️ Reset</button>
+    </div>
+  </div>
+
+  <div id="quizView" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
+    <div class="status-row">
+      <span id="quizStats">Vprašanje 1 / 20 · Točke: 0</span>
+      <button id="quizRestart" class="toggle-unknown" type="button">🔄 Nov kviz</button>
+    </div>
+    <div class="progress-wrap"><div id="quizProgress" class="progress-fill"></div></div>
+
+    <div id="quizCard" class="quiz-card">
+      <div class="card-meta">
+        <span id="quizCat" class="cat-badge">Kolokvijsko vprašanje</span>
+      </div>
+      <div id="quizQ" class="quiz-q"></div>
+      <div id="quizOpts" class="quiz-opts"></div>
+      <div id="quizExp" class="quiz-exp hidden"></div>
+      <button id="quizNext" class="btn btn-flip hidden" type="button">Naslednje vprašanje ▶</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const frac = (n, d) => `<span class="f"><span class="n">${n}</span><span class="d">${d}</span></span>`;
+
+const CATEGORIES = [
+  { id: "vse", label: "Vse" },
+  { id: "logika", label: "1. Logika & Množice" },
+  { id: "realna", label: "2. Realna števila & Koreni" },
+  { id: "kompleksna", label: "3. Kompleksna & Polarni" },
+  { id: "funkcije", label: "4. Funkcije & Lastnosti" },
+  { id: "trig", label: "5. Trig, Arkus, Exp & Log" },
+  { id: "limita", label: "6. Limita, Zveznost & Asimptote" },
+  { id: "pasti", label: "⚠️ Izpitne pasti (Moodle)" }
+];
+
+const CARDS = [
+  { id: 1, cat: "logika", catName: "1. Logika & Množice", trap: false,
+    q: "Kaj je izjava in kateri stavki NISO izjava?",
+    a: "<b>Izjava</b> je smiselna poved, ki je resnična (<code>1</code>) ali neresnična (<code>0</code>).",
+    f: "Ukaz (»Odpri okno!«), vprašanje (»Koliko je ura?«) ali nesmisel <b>NISO</b> izjava.",
+    t: "" },
+  { id: 2, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Kakšna je prioriteta logičnih veznikov in kaj velja za levi vs. desni nastop istega veznika?",
+    a: "Od najmočnejšega proti najšibkejšemu:",
+    f: "<span class='m'>¬ → ∧ → ∨, ⊻ → ⇒ → ⇔</span>",
+    t: "Pravilo s predavanj: <b>levi nastop</b> iste izjavne povezave veže močneje od desnega (npr. p⇒q⇒r pomeni (p⇒q)⇒r)." },
+  { id: 3, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Kdaj je implikacija p ⇒ q neresnična (0)?",
+    a: "Implikacija <span class='m'>p ⇒ q</span> je neresnična (<code>0</code>) <b>NATANKO V ENEM PRIMERU</b>:",
+    f: "<span class='m'>1 ⇒ 0 &nbsp;je&nbsp; 0</span> &nbsp;&nbsp;(vsi ostali trije primeri 0⇒0, 0⇒1, 1⇒1 so <b>1</b>!)",
+    t: "Če je predpostavka p neresnična (0), je implikacija p ⇒ q avtomatsko resnična (1)!" },
+  { id: 4, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Kako pravilno zanikaš implikacijo ¬(p ⇒ q)?",
+    a: "Ker velja <span class='m'>(p ⇒ q) ≡ (¬p ∨ q)</span>, po De Morganu dobimo:",
+    f: "<span class='m'>¬(p ⇒ q) ≡ p ∧ ¬q</span>",
+    t: "PAST: Negacija stavka »Če p, potem q« NIKOLI ni nov stavek s »Če...«! Pravilno: »p IN ne q«." },
+  { id: 5, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Katera izjava je vedno ekvivalentna implikaciji p ⇒ q (kontrapozicija)?",
+    a: "Kontrapozicija obrne vrstni red in zanika oba člena:",
+    f: "<span class='m'>(p ⇒ q) ≡ (¬q ⇒ ¬p)</span>",
+    t: "PAST na testih: ¬p ⇒ ¬q (obrnjen negirani) in q ⇒ p (obrat) <b>NE veljata</b>!" },
+  { id: 6, cat: "logika", catName: "1. Logika & Množice", trap: false,
+    q: "Kaj pravita De Morganova zakona za logiko in za množice?",
+    a: "Negacija/komplement zamenja IN (presek) v ALI (unijo) in obratno:",
+    f: "<span class='m'>¬(p∧q) ≡ ¬p∨¬q &nbsp;|&nbsp; ¬(p∨q) ≡ ¬p∧¬q</span><br><span class='m'>(A∪B)<sup>c</sup> = A<sup>c</sup>∩B<sup>c</sup> &nbsp;|&nbsp; (A∩B)<sup>c</sup> = A<sup>c</sup>∪B<sup>c</sup></span>",
+    t: "" },
+  { id: 7, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Kako pravilno zanikamo kvantifikatorje ∀ in ∃?",
+    a: "Kvantifikator se zamenja v nasprotnega, izraz za njim pa zanikamo:",
+    f: "<span class='m'>¬(∀x: P(x)) ≡ ∃x: ¬P(x)</span><br><span class='m'>¬(∃x: P(x)) ≡ ∀x: ¬P(x)</span>",
+    t: "PAST: Pri zanikanju neenakosti strogi &gt; postane <b>≤</b>, &lt; pa postane <b>≥</b>! (npr. ¬(∃x∈ℕ, x&gt;21) ~ ∀x∈ℕ, x≤21)." },
+  { id: 8, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Kako sta definirani razlika množic A \\ B in simetrična razlika A △ B?",
+    a: "Elementi, ki so v prvi množici in jih ni v drugi:",
+    f: "<span class='m'>A \\ B = {x; x∈A <b>∧</b> x∉B} = A ∩ B<sup>c</sup></span><br><span class='m'>A △ B = (A \\ B) ∪ (B \\ A)</span>",
+    t: "PAST v kvizih: v definiciji A \\ B je vmes konjunkcija <b>∧</b> (IN), ne ∨!" },
+  { id: 9, cat: "logika", catName: "1. Logika & Množice", trap: true,
+    q: "Koliko je |P(A)| (potenčna množica) ter kolikšni so |∅|, |{∅}| in |{4,{5,7}}|?",
+    a: "<b>Potenčna množica</b> P(A) vsebuje vse podmnožice od A (vključno z ∅ in A).",
+    f: "<span class='m'>|P(A)| = 2<sup>|A|</sup></span> &nbsp;|&nbsp; <span class='m'>|∅| = 0</span> &nbsp;|&nbsp; <span class='m'>|{∅}| = 1</span> &nbsp;|&nbsp; <span class='m'>|{4,{5,7}}| = 2</span>",
+    t: "KLASIČNA PAST: |{{}∩{}}| = |{∅}| = <b>1</b> (ker je v zunanji množici 1 element: prazna množica)!" },
+  { id: 10, cat: "logika", catName: "1. Logika & Množice", trap: false,
+    q: "Kaj je kartezični produkt A × B in ali velja A × B = B × A?",
+    a: "Množica vseh urejenih parov (a, b), kjer je a ∈ A in b ∈ B:",
+    f: "<span class='m'>|A × B| = |A| · |B|</span>",
+    t: "Pri parih je vrstni red pomemben: v splošnem <b>A × B ≠ B × A</b> (razen če je A = B ali ena izmed njiju ∅)." },
+
+  { id: 11, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kaj pomeni, da je množica ℝ (ali ℂ) obseg?",
+    a: "Da v njej velja vseh <b>10 zakonov obsega</b> za operaciji + in · :",
+    f: "Komutativnost (+,·), asociativnost (+,·), nevtralni enoti (0, 1), nasprotni (−a), inverzni (a<sup>−1</sup> za a≠0), distributivnost in 1 ≠ 0.",
+    t: "ℤ ni obseg (nima inverzov a<sup>−1</sup>); ℚ, ℝ in ℂ SO obsegi." },
+  { id: 12, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kaj pravi zakon trihotomije za realna števila in kdaj se obrne neenačaj?",
+    a: "Za poljubni a, b ∈ ℝ velja <b>natanko ena</b> od relacij:",
+    f: "<span class='m'>a &lt; b &nbsp;&nbsp;ali&nbsp;&nbsp; a = b &nbsp;&nbsp;ali&nbsp;&nbsp; a &gt; b</span>",
+    t: "Če neenačbo pomnožiš ali deliš z <b>negativnim</b> številom c &lt; 0, se neenačaj OBRNE!" },
+  { id: 13, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kaj je ε-okolica točke c in kaj punktirana ε-okolica?",
+    a: "Odprt interval s središčem v c in polmerom ε &gt; 0:",
+    f: "ε-okolica: <span class='m'>(c − ε, c + ε) ⇔ |x − c| &lt; ε</span><br>Punktirana: <span class='m'>(c − ε, c + ε) \\ {c} ⇔ 0 &lt; |x − c| &lt; ε</span>",
+    t: "" },
+  { id: 14, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kako rešujemo neenačbe z absolutno vrednostjo |x − c| &lt; r in |x − c| &gt; r?",
+    a: "|x − c| pomeni razdaljo števila x od točke c:",
+    f: "<span class='m'>|x − c| &lt; r ⇔ x ∈ (c − r, c + r)</span><br><span class='m'>|x − c| &gt; r ⇔ x ∈ (−∞, c − r) ∪ (c + r, ∞)</span>",
+    t: "Primer s testa: |−3 − x| &gt; 7 ⇔ |x + 3| &gt; 7 ⇒ (−∞, −10) ∪ (4, ∞)." },
+  { id: 15, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kako se glasi trikotniška neenakost (vse tri različice)?",
+    a: "Velja za vsaki realni in tudi kompleksni števili a, b:",
+    f: "<span class='m'>||a| − |b|| ≤ |a ± b| ≤ |a| + |b|</span>",
+    t: "" },
+  { id: 16, cat: "realna", catName: "2. Realna števila & Koreni", trap: true,
+    q: "Koliko je √(x²), koliko je ²ᵏ⁺¹√(x²ᵏ⁺¹) in koliko je 0⁰?",
+    a: "Sodi koren nenegativnega števila je po definiciji <b>vedno nenegativen</b>!",
+    f: "<span class='m'>√(x<sup>2</sup>) = |x|</span> &nbsp;|&nbsp; <span class='m'><sup>2k+1</sup>√(x<sup>2k+1</sup>) = x</span> &nbsp;|&nbsp; <span class='m'>a<sup>0</sup> = 1 (a≠0)</span>",
+    t: "NAJPOGOSTEJŠA PAST: √(x²) = <b>|x|</b> (ne x)! Izraz <b>0⁰ ni definiran</b>! Prav tako (a+b)<sup>1/n</sup> ≠ a<sup>1/n</sup> + b<sup>1/n</sup>." },
+  { id: 17, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kako izpeljemo množenje in deljenje korenov prek racionalnih potenc (a &gt; 0)?",
+    a: "Koren zapišemo kot potenco <span class='m'><sup>n</sup>√a = a<sup>1/n</sup></span>:",
+    f: `<span class='m'><sup>n</sup>√a · <sup>m</sup>√a = a<sup>1/n + 1/m</sup> = <sup>nm</sup>√(a<sup>m+n</sup>)</span><br><span class='m'>${frac('<sup>n</sup>√a','<sup>m</sup>√a')} = a<sup>1/n − 1/m</sup> = <sup>nm</sup>√(a<sup>m−n</sup>)</span>`,
+    t: "" },
+  { id: 18, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kako racionaliziramo imenovalec oblike √a ± √b in ∛a ± ∛b?",
+    a: "Pomnožimo s konjugiranim izrazom (razlika kvadratov oz. vsota/razlika kubov):",
+    f: `<span class='m'>${frac('1','√a ± √b')} · ${frac('√a ∓ √b','√a ∓ √b')} = ${frac('√a ∓ √b','a − b')}</span><br><span class='m'><sup>3</sup>√a ± <sup>3</sup>√b</span> množimo s <span class='m'>(<sup>3</sup>√a<sup>2</sup> ∓ <sup>3</sup>√ab + <sup>3</sup>√b<sup>2</sup>)</span>`,
+    t: "" },
+  { id: 19, cat: "realna", catName: "2. Realna števila & Koreni", trap: false,
+    q: "Kateri so trije koraki dokaza z matematično indukcijo?",
+    a: "Za dokaz izjave P(n) za vsak n ∈ ℕ:",
+    f: "1. <b>Baza</b> (n = 1)<br>2. <b>Indukcijska predpostavka</b> (velja za n = k)<br>3. <b>Indukcijski korak</b> (dokaži za n = k + 1)",
+    t: "" },
+
+  { id: 20, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: true,
+    q: "Kaj sta Re(z) in Im(z) pri z = a + ib in kako računamo potence iⁿ?",
+    a: "Re(z) = a (realni del), Im(z) = b (imaginarni del — realno število!), kjer je i² = −1.",
+    f: "<span class='m'>i<sup>0</sup>=1, i<sup>1</sup>=i, i<sup>2</sup>=−1, i<sup>3</sup>=−i, i<sup>4k+r</sup>=i<sup>r</sup></span>",
+    t: "PAST: Im(3 − 4i) = <b>−4</b> (BREZ i!). Pogosto vprašanje: (1±i)² = ±2i." },
+  { id: 21, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: false,
+    q: "Kako izpeljemo z·z̄, Re(z), Im(z) in inverz z⁻¹ s konjugiranjem?",
+    a: "Konjugirano število je <span class='m'>z̄ = a − ib</span>:",
+    f: `<span class='m'>z·z̄ = a<sup>2</sup> + b<sup>2</sup> = |z|<sup>2</sup></span><br><span class='m'>Re(z) = ${frac('z+z̄','2')}</span>, &nbsp; <span class='m'>Im(z) = ${frac('z−z̄','2i')}</span><br><span class='m'>z<sup>−1</sup> = ${frac('z̄','z·z̄')} = ${frac('a−ib','a<sup>2</sup>+b<sup>2</sup>')}</span>`,
+    t: "" },
+  { id: 22, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: false,
+    q: "Kako delimo kompleksni števili z / w (da dobimo Re in Im)?",
+    a: "Števec in imenovalec pomnožimo s konjugiranim imenovalcem <span class='m'>w̄</span>:",
+    f: `<span class='m'>${frac('z','w')} = ${frac('z·w̄','w·w̄')} = ${frac('(a+ib)(c−id)','c<sup>2</sup> + d<sup>2</sup>')}</span>`,
+    t: "Primer s testa: (−4+2i)/(2−4i) = −4/5 − 3/5 i ⇒ Re = −4/5." },
+  { id: 23, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: true,
+    q: "Kaj je modul |z| in ali velja |z + w| = |z| + |w|?",
+    a: "<span class='m'>|z| = √(a² + b²) = √(z·z̄)</span> predstavlja razdaljo točke z od izhodišča (0,0).",
+    f: "<span class='m'>|z·w| = |z|·|w|</span>, &nbsp; <span class='m'>|z<sup>n</sup>| = |z|<sup>n</sup></span>, &nbsp; <span class='m'>|z + w| <b>≤</b> |z| + |w|</span>",
+    t: "PAST: |z + w| = |z| + |w| na splošno <b>NE</b> velja! Velja samo neenačaj ≤." },
+  { id: 24, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: true,
+    q: "Kako se glasi polarni zapis kompleksnega števila in kateri so 4 pogoji za pravilen zapis?",
+    a: "Iz a = r cos φ in b = r sin φ dobimo polarni zapis:",
+    f: "<span class='m'>z = r(cos φ + i sin φ)</span> &nbsp;(r = |z|, φ = arg(z))",
+    t: "4 pogoji: (1) <b>r ≥ 0</b> (ne minus spredaj!), (2) najprej cos, ob i sin, (3) med njima je <b>+</b>, (4) isti kot φ. Uporaben za ·, /, zⁿ, ⁿ√z; NE za + in −!" },
+  { id: 25, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: false,
+    q: "Kako določimo kot φ v polarnem zapisu po kvadrantih (z α = arctg(|b|/|a|))?",
+    a: "Izračunamo ostri kot α z absolutnima vrednostma, nato upoštevamo kvadrant (a, b):",
+    f: "I (+,+): <b>α</b> &nbsp;|&nbsp; II (−,+): <b>π−α</b> &nbsp;|&nbsp; III (−,−): <b>π+α</b> &nbsp;|&nbsp; IV (+,−): <b>2π−α</b> (oz. −α)",
+    t: "Na oseh brez računanja: poz. realna (φ=0), poz. imag. (π/2), neg. realna (π), neg. imag. (3π/2)." },
+  { id: 26, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: false,
+    q: "Kdaj sta kompleksni števili v polarni obliki enaki (z = w)?",
+    a: "Imeti morata enak modul in argument, ki se razlikuje za poljuben večkratnik 2π:",
+    f: "<span class='m'>z = w ⇔ |z| = |w| ∧ arg(z) − arg(w) = 2kπ &nbsp;(k ∈ ℤ)</span>",
+    t: "" },
+  { id: 27, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: false,
+    q: "Kako množimo, delimo in konjugiramo v polarnem zapisu?",
+    a: "Pri množenju modula zmnožimo in kota seštejemo; pri deljenju delimo in odštejemo:",
+    f: "<span class='m'>z<sub>1</sub>z<sub>2</sub> = r<sub>1</sub>r<sub>2</sub>(cos(φ<sub>1</sub>+φ<sub>2</sub>) + i sin(φ<sub>1</sub>+φ<sub>2</sub>))</span><br><span class='m'>z̄ = r(cos φ − i sin φ) = r(cos(−φ) + i sin(−φ))</span>",
+    t: "" },
+  { id: 28, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: true,
+    q: "Kaj pravi Moivrejeva formula (potenciranje) in kakšne so pasti?",
+    a: "Modul potenciramo na n, argument pa pomnožimo z n:",
+    f: "<span class='m'>z<sup>n</sup> = r<sup>n</sup>(cos(nφ) + i sin(nφ))</span>",
+    t: "PASTI s testa: (1) Re(z) = <b>r</b> cos φ (ne brez r!), (2) <b>−z⁴</b> = −r⁴(cos 4φ + i sin 4φ) — minus ni v potenci!" },
+  { id: 29, cat: "kompleksna", catName: "3. Kompleksna & Polarni", trap: false,
+    q: "Kako glasi formula za korenjenje ⁿ√w v kompleksnem in kaj tvori geometrijsko?",
+    a: "Če je <span class='m'>w = R(cos θ + i sin θ)</span>, obstaja natanko <b>n</b> različnih korenov:",
+    f: `<span class='m'>z<sub>k</sub> = <sup>n</sup>√R (cos ${frac('θ+2kπ','n')} + i sin ${frac('θ+2kπ','n')}), &nbsp; k = 0,1,…,n−1</span>`,
+    t: "Geometrijsko: koreni z<sub>k</sub> tvorijo oglišča <b>pravilnega n-kotnika</b> na krožnici s polmerom ⁿ√R." },
+
+  { id: 30, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: false,
+    q: "Katere 4 pogoje preverjamo pri določanju naravnega definicijskega območja D_f?",
+    a: "Največja podmnožica ℝ, kjer ima izraz smisel:",
+    f: "1. Ulomek P/Q: <b>Q ≠ 0</b><br>2. Sodi koren ²ᵏ√A: <b>A ≥ 0</b><br>3. Logaritem log<sub>a</sub>A: <b>A &gt; 0</b> (a&gt;0, a≠1)<br>4. arcsin A, arccos A: <b>A ∈ [−1, 1]</b>",
+    t: "" },
+  { id: 31, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: true,
+    q: "Kdaj sta funkciji f in g ENAKI (in ali sta f(x) = x/x ter g(x) = 1 enaki)?",
+    a: "Imeti morata <b>enako definicijsko območje IN enak predpis</b>:",
+    f: "<span class='m'>f = g ⇔ D<sub>f</sub> = D<sub>g</sub> ∧ ∀x∈D<sub>f</sub>: f(x) = g(x)</span>",
+    t: "PAST: f(x) = x/x in g(x) = 1 <b>NISTA enaki funkciji</b>, ker 0 ∉ D<sub>x/x</sub> (D<sub>f</sub> = ℝ\\{0} ≠ ℝ)!" },
+  { id: 32, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: false,
+    q: "Katere so 3 oblike podajanja funkcij?",
+    a: "Vsako odvisnost lahko zapišemo na tri načine:",
+    f: "1. <b>Eksplicitno:</b> y = f(x)<br>2. <b>Implicitno:</b> F(x, y) = 0<br>3. <b>Parametrično:</b> x = x(t), y = y(t)",
+    t: "" },
+  { id: 33, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: false,
+    q: "Kaj pomeni, da je funkcija INJEKTIVNA (definicija + vodoravni preizkus)?",
+    a: "Različna vhoda se nikoli ne preslikata v isti izhod (»ena-na-ena«):",
+    f: "<span class='m'>a<sub>1</sub> ≠ a<sub>2</sub> ⇒ f(a<sub>1</sub>) ≠ f(a<sub>2</sub>)</span>",
+    t: "Vodoravni preizkus: vsaka vodoravna premica seka graf <b>največ 1× (≤ 1)</b>. Strogo monotona funkcija je vedno injektivna." },
+  { id: 34, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: true,
+    q: "Kaj pomeni, da je funkcija SURJEKTIVNA (definicija + vodoravni preizkus)?",
+    a: "Pokrita je <b>celotna kodomena B</b> (vsak element v B je vsaj enkrat zadet):",
+    f: "<span class='m'>∀b∈B ∃a∈A: f(a) = b &nbsp;⇔&nbsp; Z<sub>f</sub> = B</span>",
+    t: "Vodoravni preizkus: seka <b>vsaj 1× (≥ 1)</b>. PAZI na zapis kodomene: sin x: ℝ→ℝ NI surjektivna; sin x: ℝ→[−1,1] PA JE!" },
+  { id: 35, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: false,
+    q: "Kdaj je funkcija BIJEKTIVNA, kdaj obstaja f⁻¹ in kako narišemo graf f⁻¹?",
+    a: "Bijektivna je takrat, ko je <b>hkrati injektivna IN surjektivna</b> (vodoravna črta seka <b>= 1×</b>).",
+    f: "Funkcija ima inverz <b>f<sup>−1</sup></b> NATANKO TEDAJ, ko je <b>bijektivna</b>! &nbsp; (D<sub>f⁻¹</sub> = Z<sub>f</sub>, Z<sub>f⁻¹</sub> = D<sub>f</sub>)",
+    t: "Geometrijsko: graf f<sup>−1</sup> dobimo z <b>zrcaljenjem grafa f čez premico y = x</b>." },
+  { id: 36, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: false,
+    q: "Kako izračunamo inverz ulomljene linearne funkcije f(x) = (ax+b)/(cx+d)?",
+    a: "Zapišemo y = f(x), zamenjamo x ↔ y in izrazimo y (oz. uporabimo hitro pravilo):",
+    f: `<span class='m'>f<sup>−1</sup>(x) = ${frac('−dx + b','cx − a')}</span> &nbsp;&nbsp;(D<sub>f⁻¹</sub> = ℝ \\ {${frac('a','c')}})`,
+    t: "" },
+  { id: 37, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: false,
+    q: "V katerem vrstnem redu računamo kompozitum (f ∘ g ∘ h)(x)?",
+    a: "Vedno računamo <b>z desne proti levi</b> (notranja funkcija najprej):",
+    f: "<span class='m'>(f ∘ g ∘ h)(x) = f(g(h(x)))</span> &nbsp;|&nbsp; <span class='m'>(g ∘ f)<sup>−1</sup> = f<sup>−1</sup> ∘ g<sup>−1</sup></span>",
+    t: "Kompozitum NI komutativen: v splošnem f ∘ g ≠ g ∘ f." },
+  { id: 38, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: true,
+    q: "Kaj sta SODA in LIHA funkcija (simetrija + pravila množenja)?",
+    a: "Na simetričnem D<sub>f</sub> (če x∈D<sub>f</sub> ⇒ −x∈D<sub>f</sub>):",
+    f: "<b>Soda:</b> <span class='m'>f(−x) = f(x)</span> (simetrija čez os y: x², |x|, cos x)<br><b>Liha:</b> <span class='m'>f(−x) = −f(x)</span> (simetrija čez (0,0): x³, sin x, tg x)",
+    t: "Pravila: S·S = S, <b>L·L = S</b>, S·L = L. PAST s kviza: <b>tg x je LIHA funkcija!</b>" },
+  { id: 39, cat: "funkcije", catName: "4. Funkcije & Lastnosti", trap: true,
+    q: "Katere funkcije so periodične (s kakšno periodo) in kako je z monotonostjo sin x ter cos x?",
+    a: "Periodičnost: <span class='m'>f(x + P) = f(x)</span>. Za osnovne trig. funkcije velja:",
+    f: "sin x, cos x: perioda <b>2π</b> &nbsp;|&nbsp; tg x, ctg x: perioda <b>π</b>",
+    t: "PASTI z Moodle kvizov: (1) sin x na [3π/2, 2π] <b>JE</b> naraščajoča! (2) cos x na [3π/2, 5π/2] in [−π, π/2] <b>NI</b> monotona (vmes ima vrh pri 2π oz. 0)!" },
+
+  { id: 40, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Kje na enotski krožnici preberemo sin x, cos x, tg x, ctg x in kateri so predznaki?",
+    a: "Na krožnici s polmerom r = 1: abscisa = cos x, ordinata = sin x, tg x na tangenti x = 1, ctg x na tangenti y = 1.",
+    f: "<b>Predznaki (+):</b> I. vsi + &nbsp;|&nbsp; II. samo <b>sin</b> + &nbsp;|&nbsp; III. samo <b>tg, ctg</b> + &nbsp;|&nbsp; IV. samo <b>cos</b> +",
+    t: "" },
+  { id: 41, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Katere so točne vrednosti sin in cos za 0, π/6, π/4, π/3, π/2 ter pretvorba rad ↔ °?",
+    a: "Zapomni si »√0/2, √1/2, √2/2, √3/2, √4/2« za sin (cos gre obratno):",
+    f: `sin: <b>0, 1/2, √2/2, √3/2, 1</b> &nbsp;|&nbsp; tg: <b>0, √3/3, 1, √3, —</b><br><span class='m'>x(rad) = ${frac('π','180°')}·x(°)</span>`,
+    t: "" },
+  { id: 42, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Kako izpeljemo 1 + tg²x in 1 + ctg²x iz sin²x + cos²x = 1?",
+    a: "Osnovno zvezo delimo s cos²x oziroma s sin²x:",
+    f: `<span class='m'>1 + tg<sup>2</sup>x = ${frac('1','cos<sup>2</sup>x')}</span>, &nbsp; <span class='m'>1 + ctg<sup>2</sup>x = ${frac('1','sin<sup>2</sup>x')}</span><br>Kompl.: <span class='m'>sin(${frac('π','2')}−x) = cos x</span>, &nbsp; <span class='m'>tg(${frac('π','2')}−x) = ctg x</span>`,
+    t: "" },
+  { id: 43, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Kako se glasijo adicijski izreki in formule za dvojni kot (sin 2x, cos 2x)?",
+    a: "Pri y = x iz adicijskih takoj dobimo dvojni kot in formuli za zniževanje potenc:",
+    f: "<span class='m'>sin(x±y) = sin x cos y ± cos x sin y</span><br><span class='m'>cos(x±y) = cos x cos y ∓ sin x sin y</span><br><span class='m'>sin 2x = 2 sin x cos x</span> &nbsp;|&nbsp; <span class='m'>cos 2x = cos<sup>2</sup>x − sin<sup>2</sup>x = 1 − 2sin<sup>2</sup>x = 2cos<sup>2</sup>x − 1</span>",
+    t: "" },
+  { id: 44, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Kaj pove diskriminanta D polinoma 2. stopnje in kakšne so racionalne ničle za Hornerja?",
+    a: "Za p(x) = ax² + bx + c je <span class='m'>D = b² − 4ac</span>:",
+    f: `D &gt; 0: 2 realni ničli | D = 0: 1 dvojna realna (dotik osi x) | D &lt; 0: 2 konj. kompleksni ničli.<br>Racionalna ničla <span class='m'>${frac('m','n')}</span>: <b>m deli prosti člen a<sub>0</sub></b>, <b>n deli vodilni koeficient a<sub>n</sub></b>.`,
+    t: "Polinom lihe stopnje ima vedno vsaj eno realno ničlo (ker kompleksne nastopajo v konjugiranih parih)!" },
+  { id: 45, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Kaj so ničle in kaj poli racionalne funkcije f(x) = p(x) / q(x)?",
+    a: "Po krajšanju skupnih faktorjev:",
+    f: "<b>Ničle f(x):</b> točke, kjer je števec p(x) = 0 (in q(x) ≠ 0).<br><b>Poli (navpične asimptote):</b> točke, kjer je imenovalec q(x) = 0 (in p(x) ≠ 0).",
+    t: "" },
+  { id: 46, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: true,
+    q: "Kakšne so zaloge vrednosti za arcsin, arccos, arctg, arcctg in past pri arcsin(sin 3π/4)?",
+    a: "Glavne veje imajo strogo določeno zalogo vrednosti (izhode):",
+    f: `<span class='m'>arcsin: [−1,1] → [−${frac('π','2')}, ${frac('π','2')}]</span> &nbsp;|&nbsp; <span class='m'>arccos: [−1,1] → [0, π]</span><br><span class='m'>arctg: ℝ → (−${frac('π','2')}, ${frac('π','2')})</span> &nbsp;|&nbsp; <span class='m'>arcctg: ℝ → (0, π)</span>`,
+    t: "PAST: arcsin(sin(3π/4)) <b>NI</b> 3π/4 (ker 3π/4 ∉ [−π/2, π/2])! Ker je sin(3π/4) = sin(π/4), je rezultat <b>π/4</b>." },
+  { id: 47, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: true,
+    q: "Ali so arkus funkcije periodične in katera narašča / pada?",
+    a: "Inverzne trigonometrične funkcije imajo omejeno zalogo in niso ponavljajoče:",
+    f: "<b>naraščajoči (lihi):</b> arcsin x, arctg x<br><b>padajoči:</b> arccos x, arcctg x",
+    t: "KLASIČNA PAST: <b>Arkus funkcije NISO periodične!</b> (Vse 4 pa SO omejene po vrednostih!)" },
+  { id: 48, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: true,
+    q: "Kakšne so lastnosti eksponentne funkcije f(x) = aˣ (a &gt; 0, a ≠ 1)?",
+    a: "D<sub>f</sub> = ℝ, Z<sub>f</sub> = (0, ∞) (vedno pozitivna, <b>nima ničel</b>), graf vedno gre skozi <b>(0, 1)</b>.",
+    f: "za <b>a &gt; 1</b> (npr. e<sup>x</sup>): strogo <b>NARAŠČA</b><br>za <b>0 &lt; a &lt; 1</b> (npr. 0.5<sup>x</sup>): strogo <b>PADA</b>",
+    t: "PAST: f(x) = (1/2)<sup>x</sup> ali 0.5<sup>x</sup> <b>PADA</b>! Eksponentna funkcija je strogo monotona, zato je injektivna." },
+  { id: 49, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Kakšna je logaritemska funkcija y = log_a x in njena zveza z eksponentno?",
+    a: "Inverz eksponentne funkcije: D = (0, ∞), Z = ℝ, gre skozi <b>(1, 0)</b>, za a &gt; 1 narašča, za 0 &lt; a &lt; 1 pada.",
+    f: "<span class='m'>y = log<sub>a</sub> x ⇔ a<sup>y</sup> = x</span> &nbsp;|&nbsp; <span class='m'>log<sub>a</sub> a = 1</span>, <span class='m'>log<sub>a</sub> 1 = 0</span><br>log x = log<sub>10</sub>x &nbsp;|&nbsp; ln x = log<sub>e</sub>x &nbsp;|&nbsp; lg x = log<sub>2</sub>x",
+    t: "" },
+  { id: 50, cat: "trig", catName: "5. Trig, Arkus, Exp & Log", trap: false,
+    q: "Katera so pravila računanja z logaritmi in formula za menjavo osnove?",
+    a: "Za x, y &gt; 0 in a &gt; 0, a ≠ 1:",
+    f: `<span class='m'>log<sub>a</sub>(xy) = log<sub>a</sub>x + log<sub>a</sub>y</span> &nbsp;|&nbsp; <span class='m'>log<sub>a</sub>(${frac('x','y')}) = log<sub>a</sub>x − log<sub>a</sub>y</span><br><span class='m'>log<sub>a</sub>(x<sup>r</sup>) = r·log<sub>a</sub>x</span> &nbsp;|&nbsp; <b>Menjava:</b> <span class='m'>log<sub>a</sub>b = ${frac('log<sub>c</sub>b','log<sub>c</sub>a')} = ${frac('1','log<sub>b</sub>a')}</span>`,
+    t: "" },
+
+  { id: 51, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kako se glasi formalna (ε, δ) definicija limite funkcije v točki a?",
+    a: "Število L je limita f v točki a, ko lahko f(x) spravimo poljubno blizu L, če je x ≠ a dovolj blizu a:",
+    f: "<span class='m'>lim<sub>x→a</sub> f(x) = L ⇔ ∀ε&gt;0, ∃δ&gt;0, ∀x≠a: |x−a|&lt;δ ⇒ |f(x)−L|&lt;ε</span>",
+    t: "Pazi na <b>∀x ≠ a</b>: funkcija v sami točki a sploh ne rabi biti definirana, da bi limita obstajala!" },
+  { id: 52, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: true,
+    q: "Kdaj obstaja limita v točki a (leva vs desna) in kaj velja za |x|/x v točki 0?",
+    a: "Limita v točki a obstaja natanko tedaj, ko obstajata leva in desna limita in sta <b>enaki</b>:",
+    f: "<span class='m'>∃ lim<sub>x→a</sub> f(x) = L ⇔ L<sub>l</sub> = L<sub>d</sub> = L</span>",
+    t: "Primer: za |x|/x je lim<sub>x→0⁺</sub> = 1, lim<sub>x→0⁻</sub> = −1 ⇒ L<sub>l</sub> ≠ L<sub>d</sub> ⇒ limita v 0 <b>NE obstaja</b>!" },
+  { id: 53, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Katerih je 7 nedoločenih izrazov pri računanju limit?",
+    a: "Ko vstaviš vrednost, pri teh oblikah rezultata še ne veš in moraš uporabiti trik:",
+    f: `<span class='m'>${frac('0','0')}, &nbsp;&nbsp; ±${frac('∞','∞')}, &nbsp;&nbsp; ∞·0, &nbsp;&nbsp; ∞ − ∞, &nbsp;&nbsp; 1<sup>∞</sup>, &nbsp;&nbsp; ∞<sup>0</sup>, &nbsp;&nbsp; 0<sup>0</sup></span>`,
+    t: "Pazi: c / ±∞ = 0 (NI nedoločeno!); c / 0⁺ = +∞ (NI nedoločeno!)." },
+  { id: 54, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kaj narediš pri limiti x → a, ko dobiš [0 / 0] s polinomi ali s koreni?",
+    a: "Cilj je znebiti se faktorja (x − a), ki povzroča ničlo:",
+    f: "• <b>Polinomi:</b> razstavi (a²−b², Horner...) in pokrajšaj <b>(x − a)</b><br>• <b>Koreni (√A − B):</b> pomnoži s konjugiranim <b>(√A + B)</b> zgoraj in spodaj",
+    t: "" },
+  { id: 55, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: true,
+    q: "Kakšen je postopek pri limiti x → ±∞ [∞ / ∞] in kakšna je past pri √(x² + 1)?",
+    a: "Števec in imenovalec delimo z <b>najvišjo potenco imenovalca</b> (členi c/xᵏ → 0).",
+    f: "st.p &lt; st.q ⇒ <b>0</b> &nbsp;|&nbsp; st.p = st.q ⇒ <b>a<sub>n</sub>/b<sub>n</sub></b> &nbsp;|&nbsp; st.p &gt; st.q ⇒ <b>±∞</b>",
+    t: "PAST pri x → −∞: pri izvleku x² izpod korena je √(x²) = |x| = <b>−x</b> (ne +x)!" },
+  { id: 56, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kateri so 4 osnovni obrazci ('znane limite') in bližnjica za e?",
+    a: "Obrazci, ki jih uporabljamo direktno za [0/0] in [1^∞]:",
+    f: `<span class='m'>lim<sub>x→0</sub> ${frac('sin x','x')} = 1</span> &nbsp;|&nbsp; <span class='m'>lim<sub>x→0</sub> ${frac('ln(1+x)','x')} = 1</span><br><span class='m'>lim<sub>x→∞</sub> (1+${frac('1','x')})<sup>x</sup> = e</span> &nbsp;|&nbsp; <span class='m'>lim<sub>x→0</sub> (1+x)<sup>1/x</sup> = e</span><br><b>Trik:</b> <span class='m'>lim<sub>x→∞</sub> (1 + ${frac('a','x')})<sup>bx</sup> = e<sup>a·b</sup></span>`,
+    t: "" },
+  { id: 57, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kateri so 3 pogoji, da je funkcija f ZVEZNA v točki x₀?",
+    a: "Vsi trije pogoji morajo veljati hkrati:",
+    f: "1. <span class='m'>x<sub>0</sub> ∈ D<sub>f</sub></span> (obstaja f(x<sub>0</sub>))<br>2. <span class='m'>∃ lim<sub>x→x₀</sub> f(x)</span> (torej L<sub>l</sub> = L<sub>d</sub>)<br>3. <span class='m'>lim<sub>x→x₀</sub> f(x) = f(x<sub>0</sub>)</span>",
+    t: "V nalogah s parametrom a v stični točki x₀ rešiš enačbo L<sub>l</sub> = L<sub>d</sub> = f(x₀)." },
+  { id: 58, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kdaj je funkcija zvezna na zaprtem intervalu [a, b]?",
+    a: "Zvezna mora biti povsod znotraj intervala in v obeh robovih iz notranje strani:",
+    f: "Zvezna na (a, b) ter <span class='m'>lim<sub>x→a⁺</sub> f(x) = f(a)</span> in <span class='m'>lim<sub>x→b⁻</sub> f(x) = f(b)</span>.",
+    t: "" },
+  { id: 59, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kako izračunamo vertikalno, horizontalno in poševno asimptoto splošne funkcije f(x)?",
+    a: "<b>Vertikalna (x = a):</b> vsaj ena enostranska limita v a je ±∞.",
+    f: `<b>Poševna/Horiz. (y = kx + n):</b><br><span class='m'>k = lim<sub>x→±∞</sub> ${frac('f(x)','x')}</span>, &nbsp;&nbsp; <span class='m'>n = lim<sub>x→±∞</sub> (f(x) − kx)</span>`,
+    t: "Če je k = 0, je asimptota horizontalna (y = n). Pri x → +∞ je desna, pri x → −∞ pa leva." },
+  { id: 60, cat: "limita", catName: "6. Limita, Zveznost & Asimptote", trap: false,
+    q: "Kakšne asimptote ima racionalna funkcija p(x)/q(x) in kako najdemo presečišče z asimptoto?",
+    a: "Gledamo stopnji polinomov v števcu in imenovalcu:",
+    f: "1. st.p &lt; st.q ⇒ horiz. <b>y = 0</b><br>2. st.p = st.q ⇒ horiz. <b>y = a/b</b> (vodilna koef.)<br>3. st.p &gt; st.q ⇒ delimo p:q; <b>celi del</b> je asimptota!",
+    t: "Presečišče grafa z asimptoto najdeš tako, da <b>ostanek pri deljenju izenačiš z 0</b>." }
+];
+
+const QUIZ = [
+  { cat: "1. Logika & Množice", q: "Kolikšna je moč množice A = {{} ∩ {}} ?", opts: ["0", "1", "2", "Ni definirana"], ans: 1, exp: "{} ∩ {} je ∅. Množica {∅} ima en sam element (prazno množico), zato je |{∅}| = 1!" },
+  { cat: "1. Logika & Množice", q: "Katera izjava je pravilna negacija implikacije ¬(p ⇒ q)?", opts: ["¬p ⇒ ¬q", "p ⇒ ¬q", "p ∧ ¬q", "¬p ∨ q"], ans: 2, exp: "Ker je (p ⇒ q) ≡ (¬p ∨ q), z negiranjem po De Morganu dobimo p ∧ ¬q. Negacija implikacije ni nikoli implikacija!" },
+  { cat: "1. Logika & Množice", q: "Katera izjava je vedno enakovredna implikaciji p ⇒ q?", opts: ["q ⇒ p", "¬p ⇒ ¬q", "¬q ⇒ ¬p", "p ∧ q"], ans: 2, exp: "To je kontrapozicija: (p ⇒ q) ≡ (¬q ⇒ ¬p)." },
+  { cat: "1. Logika & Množice", q: "Kaj pomeni izjava A \\ B?", opts: ["{x; x∈A ∨ x∉B}", "{x; x∈A ∧ x∉B}", "{x; x∉A ∧ x∈B}", "{x; x∈A ∨ x∈B}"], ans: 1, exp: "Razlika množic so elementi, ki so v A IN (∧) niso v B." },
+  { cat: "2. Realna števila", q: "Za vsak realen x ∈ ℝ velja: √(x²) = ?", opts: ["x", "−x", "|x|", "±x"], ans: 2, exp: "Sodi koren je vedno nenegativen, zato je √(x²) = |x| (npr. za x = −3 je √9 = 3 = |−3|)." },
+  { cat: "2. Realna števila", q: "Katera je rešitev neenačbe |−3 − x| &gt; 7?", opts: ["(−10, 4)", "(−∞, −10) ∪ (4, ∞)", "(−4, 10)", "(−∞, −4) ∪ (10, ∞)"], ans: 1, exp: "|−3 − x| = |x + 3| &gt; 7 pomeni razdalja od −3 je večja od 7 ⇒ x &lt; −10 ali x &gt; 4." },
+  { cat: "3. Kompleksna", q: "Koliko je Re(z) za z = (−4 + 2i) / (2 − 4i)?", opts: ["−4/5", "−3/5", "4/5", "−16"], ans: 0, exp: "Pomnožimo z (2+4i): števec = −8−16i+4i−8 = −16−12i, imenovalec = 4+16 = 20 ⇒ −16/20 = −4/5." },
+  { cat: "3. Kompleksna", q: "Če je z = r(cos φ + i sin φ), koliko je −z⁴?", opts: ["r⁴(cos 4φ + i sin 4φ)", "−r⁴(cos 4φ + i sin 4φ)", "−r⁴(cos 4φ − i sin 4φ)", "r⁴(cos(−4φ) + i sin(−4φ))"], ans: 1, exp: "Po Moivru je z⁴ = r⁴(cos 4φ + i sin 4φ), nato postavimo minus spredaj (ker ni v oklepaju)." },
+  { cat: "3. Kompleksna", q: "Če je z = r(cos φ + i sin φ), koliko je Re(z)?", opts: ["cos φ", "r sin φ", "r cos φ", "r(cos φ + sin φ)"], ans: 2, exp: "Realni del je r·cos φ (pazi, da ne izpustiš modula r!)." },
+  { cat: "3. Kompleksna", q: "Za kateri operaciji je polarni zapis kompleksnih števil najbolj uporaben?", opts: ["Seštevanje in odštevanje", "Potenciranje in korenjenje", "Iskanje konjugata v a+ib", "Primerjanje Re(z) in Im(z)"], ans: 1, exp: "Polarni zapis uporabljamo za množenje, deljenje, potenciranje (Moivre) in korenjenje; za +/− ni uporaben!" },
+  { cat: "4. Funkcije", q: "Ali sta funkciji f(x) = x/x in g(x) = 1 enaki funkciji?", opts: ["Da, ker se x pokrajša.", "Ne, ker imata različni definicijski območji.", "Da, samo za x &gt; 0.", "Ne, ker f ni surjektivna."], ans: 1, exp: "D_f = ℝ \\ {0}, D_g = ℝ. Ker nimata enakega D_f, funkciji NISTA enaki!" },
+  { cat: "4. Funkcije", q: "Funkcija f: A → B ima inverzno funkcijo f⁻¹ natanko tedaj, ko je:", opts: ["Injektivna", "Surjektivna", "Bijektivna", "Omejena"], ans: 2, exp: "Inverz obstaja natanko tedaj, ko je funkcija hkrati injektivna in surjektivna (torej bijektivna)." },
+  { cat: "4. Funkcije", q: "Kakšna je funkcija f(x) = tg x glede na sodost/lihost in periodo?", opts: ["Soda, perioda 2π", "Liha, perioda 2π", "Liha, perioda π", "Soda, perioda π"], ans: 2, exp: "tg(−x) = −tg(x) ⇒ LIHA funkcija z osnovno periodo π." },
+  { cat: "4. Funkcije", q: "Ali je cos x na intervalu [−π, π/2] monotona?", opts: ["Da, naraščajoča", "Da, padajoča", "Ne", "Samo pri x = 0"], ans: 2, exp: "Od −π do 0 cosinus narašča (od −1 do 1), od 0 do π/2 pa pada (od 1 do 0) ⇒ NI monotona." },
+  { cat: "5. Trig, Arkus & Exp", q: "Koliko je arcsin(sin(3π/4))?", opts: ["3π/4", "π/4", "−π/4", "π/2"], ans: 1, exp: "Zaloga vrednosti za arcsin je [−π/2, π/2]. Ker je sin(3π/4) = sin(π/4) = √2/2, je rezultat π/4!" },
+  { cat: "5. Trig, Arkus & Exp", q: "Katera trditev o funkciji arctg x je pravilna?", opts: ["Je periodična s periodo π.", "Je liha in strogo naraščajoča.", "Njena zaloga vrednosti je [0, π].", "Ni omejena."], ans: 1, exp: "arctg x je liha, strogo naraščajoča in omejena na (−π/2, π/2). Nobena arkus funkcija NI periodična!" },
+  { cat: "5. Trig, Arkus & Exp", q: "Funkcija f(x) = (0,5)ˣ na ℝ je:", opts: ["Strogo naraščajoča", "Strogo padajoča", "Ima ničlo v (0,1)", "Soda funkcija"], ans: 1, exp: "Ker je osnova a = 0,5 med 0 in 1 (0 &lt; a &lt; 1), je eksponentna funkcija strogo padajoča." },
+  { cat: "6. Limite & Zveznost", q: "Koliko je lim(x→∞) (1 + 3/x)⁻ˣ?", opts: ["e³", "e⁻³", "1", "∞"], ans: 1, exp: "Po obrazcu (1 + a/x)^(bx) → e^(a·b) dobimo e^(3·(−1)) = e⁻³." },
+  { cat: "6. Limite & Zveznost", q: "Koliko je lim(x→−∞) √(x² + 1) / x?", opts: ["1", "−1", "0", "+∞"], ans: 1, exp: "Pri x → −∞ je √(x²) = |x| = −x, zato se v števcu izpostavi −x in dobimo (−x·1)/x = −1!" },
+  { cat: "6. Limite & Zveznost", q: "Katera funkcija v točki a = 0 NIMA limite, čeprav obstajata obe enostranski limiti?", opts: ["x²", "|x|", "|x| / x", "sin(x) / x"], ans: 2, exp: "Za |x|/x je desna limita 1, leva pa −1. Ker sta različni (L_l ≠ L_d), limita v 0 ne obstaja." }
+];
+
+const LS_KNOWN = "mat1_known_v1";
+const LS_THEME = "mat1_theme_v1";
+
+let knownSet = new Set(JSON.parse(localStorage.getItem(LS_KNOWN) || "[]"));
+let currentCat = "vse";
+let onlyUnknown = false;
+let deck = [];
+let idx = 0;
+
+const htmlEl = document.documentElement;
+const savedTheme = localStorage.getItem(LS_THEME);
+if (savedTheme === "dark" || (!savedTheme && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+  htmlEl.classList.add("dark");
+}
+document.getElementById("themeBtn").onclick = () => {
+  htmlEl.classList.toggle("dark");
+  localStorage.setItem(LS_THEME, htmlEl.classList.contains("dark") ? "dark" : "light");
+};
+
+const tabFlash = document.getElementById("tabFlash");
+const tabQuiz = document.getElementById("tabQuiz");
+const flashView = document.getElementById("flashView");
+const quizView = document.getElementById("quizView");
+
+tabFlash.onclick = () => {
+  tabFlash.classList.add("active");
+  tabQuiz.classList.remove("active");
+  flashView.classList.remove("hidden");
+  quizView.classList.add("hidden");
+};
+tabQuiz.onclick = () => {
+  tabQuiz.classList.add("active");
+  tabFlash.classList.remove("active");
+  quizView.classList.remove("hidden");
+  flashView.classList.add("hidden");
+};
+
+const chipsEl = document.getElementById("chips");
+function renderChips() {
+  chipsEl.innerHTML = "";
+  CATEGORIES.forEach(c => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip" + (c.id === "pasti" ? " trap-chip" : "") + (currentCat === c.id ? " active" : "");
+    b.textContent = c.label;
+    b.onclick = () => {
+      currentCat = c.id;
+      idx = 0;
+      buildDeck();
+      renderChips();
+    };
+    chipsEl.appendChild(b);
+  });
+}
+
+function buildDeck() {
+  let list = CARDS.filter(c => {
+    if (currentCat === "vse") return true;
+    if (currentCat === "pasti") return c.trap;
+    return c.cat === currentCat;
+  });
+  if (onlyUnknown) {
+    list = list.filter(c => !knownSet.has(c.id));
+  }
+  deck = list;
+  if (idx >= deck.length) idx = Math.max(0, deck.length - 1);
+  renderCard();
+}
+
+const card3d = document.getElementById("card3d");
+function renderCard() {
+  card3d.classList.remove("flipped");
+  const totalInScope = CARDS.filter(c => currentCat === "vse" ? true : (currentCat === "pasti" ? c.trap : c.cat === currentCat));
+  const knownInScope = totalInScope.filter(c => knownSet.has(c.id)).length;
+  const pct = totalInScope.length ? Math.round((knownInScope / totalInScope.length) * 100) : 0;
+  document.getElementById("progressBar").style.width = pct + "%";
+
+  if (deck.length === 0) {
+    document.getElementById("counterTxt").textContent = `Vse kartice v tem sklopu znaš! (${knownInScope}/${totalInScope.length})`;
+    document.getElementById("fCat").textContent = "Čestitke!";
+    document.getElementById("fTrap").classList.add("hidden");
+    document.getElementById("fKnown").className = "known-pill yes";
+    document.getElementById("fKnown").textContent = "✅ Končano";
+    document.getElementById("qText").innerHTML = "V tem sklopu ni več neznanih kartic!<br><br>Klikni <b>»Samo neznane«</b> ali <b>»♻️ Reset«</b> za nov krog.";
+    document.getElementById("bCat").textContent = "Bravo";
+    document.getElementById("bKnown").className = "known-pill yes";
+    document.getElementById("bKnown").textContent = "✅ Znam";
+    document.getElementById("aText").innerHTML = "Pripravljen/-a na kolokvij!";
+    return;
+  }
+
+  const c = deck[idx];
+  const isKnown = knownSet.has(c.id);
+  document.getElementById("counterTxt").textContent = `Kartica ${idx + 1} / ${deck.length} · Znam: ${knownInScope}/${totalInScope.length}`;
+  document.getElementById("fCat").textContent = c.catName;
+  document.getElementById("bCat").textContent = c.catName;
+
+  if (c.trap) document.getElementById("fTrap").classList.remove("hidden");
+  else document.getElementById("fTrap").classList.add("hidden");
+
+  [document.getElementById("fKnown"), document.getElementById("bKnown")].forEach(el => {
+    el.className = "known-pill " + (isKnown ? "yes" : "no");
+    el.textContent = isKnown ? "✅ Znam" : "Še vadim";
+  });
+
+  document.getElementById("qText").innerHTML = c.q;
+
+  let backHtml = `<div>${c.a}</div>`;
+  if (c.f) backHtml += `<div class="formula-box">${c.f}</div>`;
+  if (c.t) backHtml += `<div class="trap-box">⚠️ ${c.t}</div>`;
+  document.getElementById("aText").innerHTML = backHtml;
+}
+
+card3d.onclick = () => card3d.classList.toggle("flipped");
+document.getElementById("btnFlip").onclick = () => card3d.classList.toggle("flipped");
+
+function goNext() {
+  if (!deck.length) return;
+  idx = (idx + 1) % deck.length;
+  renderCard();
+}
+function goPrev() {
+  if (!deck.length) return;
+  idx = (idx - 1 + deck.length) % deck.length;
+  renderCard();
+}
+
+document.getElementById("btnNext").onclick = goNext;
+document.getElementById("btnPrev").onclick = goPrev;
+
+document.getElementById("btnKnow").onclick = () => {
+  if (!deck.length) return;
+  knownSet.add(deck[idx].id);
+  localStorage.setItem(LS_KNOWN, JSON.stringify([...knownSet]));
+  if (onlyUnknown) {
+    deck.splice(idx, 1);
+    if (idx >= deck.length) idx = 0;
+    renderCard();
+  } else {
+    goNext();
+  }
+};
+
+document.getElementById("btnRepeat").onclick = () => {
+  if (!deck.length) return;
+  knownSet.delete(deck[idx].id);
+  localStorage.setItem(LS_KNOWN, JSON.stringify([...knownSet]));
+  goNext();
+};
+
+document.getElementById("btnShuffle").onclick = () => {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0;
+  renderCard();
+};
+
+document.getElementById("unknownToggle").onclick = (e) => {
+  onlyUnknown = !onlyUnknown;
+  e.currentTarget.classList.toggle("active", onlyUnknown);
+  idx = 0;
+  buildDeck();
+};
+
+document.getElementById("btnReset").onclick = () => {
+  knownSet.clear();
+  localStorage.removeItem(LS_KNOWN);
+  onlyUnknown = false;
+  document.getElementById("unknownToggle").classList.remove("active");
+  idx = 0;
+  buildDeck();
+};
+
+let touchStartX = 0, touchStartY = 0;
+const stage = document.getElementById("stage");
+stage.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].clientX;
+  touchStartY = e.changedTouches[0].clientY;
+}, { passive: true });
+stage.addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+    if (dx < 0) goNext();
+    else goPrev();
+  }
+}, { passive: true });
+
+let qList = [], qIdx = 0, qScore = 0, qAnswered = false;
+function initQuiz() {
+  qList = [...QUIZ];
+  for (let i = qList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [qList[i], qList[j]] = [qList[j], qList[i]];
+  }
+  qIdx = 0; qScore = 0;
+  renderQuiz();
+}
+function renderQuiz() {
+  qAnswered = false;
+  document.getElementById("quizProgress").style.width = Math.round((qIdx / qList.length) * 100) + "%";
+  if (qIdx >= qList.length) {
+    document.getElementById("quizStats").textContent = `Končano! Točke: ${qScore} / ${qList.length}`;
+    document.getElementById("quizCat").textContent = "Rezultat kviza";
+    document.getElementById("quizQ").innerHTML = `Dosegel/-a si <b>${qScore} od ${qList.length}</b> (${Math.round((qScore/qList.length)*100)} %)!`;
+    document.getElementById("quizOpts").innerHTML = "";
+    document.getElementById("quizExp").classList.add("hidden");
+    document.getElementById("quizNext").classList.add("hidden");
+    return;
+  }
+  const item = qList[qIdx];
+  document.getElementById("quizStats").textContent = `Vprašanje ${qIdx + 1} / ${qList.length} · Točke: ${qScore}`;
+  document.getElementById("quizCat").textContent = item.cat;
+  document.getElementById("quizQ").innerHTML = item.q;
+  const optsEl = document.getElementById("quizOpts");
+  optsEl.innerHTML = "";
+  const expEl = document.getElementById("quizExp");
+  const nextBtn = document.getElementById("quizNext");
+  expEl.classList.add("hidden");
+  nextBtn.classList.add("hidden");
+
+  item.opts.forEach((optText, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "opt-btn";
+    btn.innerHTML = optText;
+    btn.onclick = () => {
+      if (qAnswered) return;
+      qAnswered = true;
+      const all = optsEl.querySelectorAll(".opt-btn");
+      all[item.ans].classList.add("correct");
+      if (i === item.ans) qScore++;
+      else btn.classList.add("wrong");
+      document.getElementById("quizStats").textContent = `Vprašanje ${qIdx + 1} / ${qList.length} · Točke: ${qScore}`;
+      expEl.innerHTML = `💡 ${item.exp}`;
+      expEl.classList.remove("hidden");
+      nextBtn.classList.remove("hidden");
+    };
+    optsEl.appendChild(btn);
+  });
+}
+document.getElementById("quizNext").onclick = () => { qIdx++; renderQuiz(); };
+document.getElementById("quizRestart").onclick = initQuiz;
+
+renderChips();
+buildDeck();
+initQuiz();
+</script>
+</body>
+</html>
